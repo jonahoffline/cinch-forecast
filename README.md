@@ -1,3 +1,6 @@
+[![Gem Version](https://badge.fury.io/rb/cinch-forecast.png)](http://badge.fury.io/rb/cinch-forecast)
+[![Dependency Status](https://gemnasium.com/jonahoffline/cinch-forecast.png)](https://gemnasium.com/jonahoffline/cinch-forecast)
+
 Cinch::Forecast
 =================
 

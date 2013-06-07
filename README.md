@@ -38,7 +38,7 @@ require 'cinch/plugins/forecast'
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = 'irc.freenode.net'
-    c.nick   = 'Tabin_Pumarejo'
+    c.nick   = 'Tavin_Pumarejo'
     c.channels = ['#RubyOnADHD']
     c.plugins.plugins = [Cinch::Plugins::Forecast]
   end
@@ -48,6 +48,9 @@ bot.start
 ```
 
 Enjoy!
+
+## Author
+  * [Jonah Ruiz](http://www.pixelhipsters.com)
 
 ## Contributing
 

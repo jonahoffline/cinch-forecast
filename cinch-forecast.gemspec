@@ -12,11 +12,11 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/jonahoffline/cinch-forecast'
   spec.license       = 'MIT'
 
-  spec.files         = Dir['{lib}/**/*','LICENSE.txt', 'README.md', 'cinch-forecast.gemspec']
+  spec.files         = `git ls-files`.split($/)
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 1.9.3'
 
-  spec.add_dependency 'cinch', '~> 2.0.4'
+  spec.add_dependency 'cinch', '~> 2.0.5'
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake'
 end

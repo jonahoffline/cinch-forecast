@@ -5,26 +5,31 @@ require 'json'
 
 module Cinch
   module Plugins
+    # Forecast is a Cinch plugin for getting the weather forecast.
+    # @author Jonah Ruiz <jonah@pixelhipsters.com>
     class Forecast
       include Cinch::Plugin
 
       match /forecast (.+)/
-      def execute(m, query)
-        ##
-        # Gets location using zipcode
+      # Executes the geolookup and get_conditions method when Regexp is matched
+      #
+      # @param msg [Cinch::Bot] passed internally by the framework.
+      # @param query [String] zipcode captured by the match method.
+      # @return [String] weather summary to IRC channel.
+      def execute(msg, query)
         location = geolookup(query)
-        return m.reply "No results found for #{query}." if location.nil?
+        return msg.reply "No results found for #{query}." if location.nil?
 
-        ##
-        # Gets the weather conditions
         data = get_conditions(location)
-        return m.reply 'Problem getting data. Try again later.' if data.nil?
+        return msg.reply 'Problem getting data. Try again later.' if data.nil?
 
-        ##
-        # Returns the weather summary
-        m.reply(weather_summary(data))
+        msg.reply(weather_summary(data))
       end
 
+      # Finds location for zipcode
+      #
+      # @param zipcode [String] zipcode
+      # @return [String] location-specific parameter for getting conditions.
       def geolookup(zipcode)
         location = JSON.parse(open("http://api.wunderground.com/api/#{ENV['WUNDERGROUND_KEY']}/geolookup/q/#{zipcode}.json").read)
         location['location']['l']
@@ -32,50 +37,48 @@ module Cinch
         nil
       end
 
+      # Fetches weather conditions and formats output
+      #
+      # @param location [String] provided by the geolookup method
+      # @return [OpenStruct] parsed weather conditions.
       def get_conditions(location)
-        data = JSON.parse(open("http://api.wunderground.com/api/#{ENV['WUNDERGROUND_KEY']}/conditions#{location}.json").read)
+        data          = JSON.parse(open("http://api.wunderground.com/api/#{ENV['WUNDERGROUND_KEY']}/conditions#{location}.json").read)
+        current       = data['current_observation']
+        location_data = current['display_location']
 
-        ##
-        # Clean up and return as an OpenStruct
         OpenStruct.new(
-            ##
-            # County, State & Country
-            county: data['current_observation']['display_location']['full'],
-            country: data['current_observation']['display_location']['country'],
+          county:            location_data['full'],
+          country:           location_data['country'],
 
-            ##
-            # Latitude and Longitude
-            lat: data['current_observation']['display_location']['latitude'],
-            lng: data['current_observation']['display_location']['longitude'],
+          lat:               location_data['latitude'],
+          lng:               location_data['longitude'],
 
-            ##
-            # Observation Time and General Weather Information
-            observation_time: data['current_observation']['observation_time'],
-            weather: data['current_observation']['weather'],
-            temp_fahrenheit: data['current_observation']['temp_f'],
-            temp_celcius: data['current_observation']['temp_c'],
-            relative_humidity: data['current_observation']['relative_humidity'],
-            feels_like: data['current_observation']['feelslike_string'],
-            uv: data['current_observation']['UV'],
+          observation_time:  current['observation_time'],
+          weather:           current['weather'],
+          temp_fahrenheit:   current['temp_f'],
+          temp_celcius:      current['temp_c'],
+          relative_humidity: current['relative_humidity'],
+          feels_like:        current['feelslike_string'],
+          uv_level:          current['UV'],
 
-            ##
-            # Wind Related Data
-            wind: data['current_observation']['wind_string'],
-            wind_direction: data['current_observation']['wind_dir'],
-            wind_degrees: data['current_observation']['wind_degrees'],
-            wind_mph: data['current_observation']['wind_mph'],
-            wind_gust_mph: data['current_observation']['wind_gust_mph'],
-            wind_kph: data['current_observation']['wind_kph'],
-            pressure_mb: data['current_observation']['pressure_mb'],
+          wind:              current['wind_string'],
+          wind_direction:    current['wind_dir'],
+          wind_degrees:      current['wind_degrees'],
+          wind_mph:          current['wind_mph'],
+          wind_gust_mph:     current['wind_gust_mph'],
+          wind_kph:          current['wind_kph'],
+          pressure_mb:       current['pressure_mb'],
 
-            ##
-            # Forecast URL
-            forecast_url: data['current_observation']['forecast_url']
+          forecast_url:      current['forecast_url']
         )
       rescue
         nil
       end
 
+      # Displays weather summary for IRC output
+      #
+      # @param data [OpenStruct] weather conditions data
+      # @return [String] weather summary.
       def weather_summary(data)
         ##
         # Sample Summary using !forecast 00687
@@ -92,7 +95,7 @@ module Cinch
           Forecast for: #{data.county}, #{data.country}
           Latitude: #{data.lat}, Longitude: #{data.lng}
           Weather is #{data.weather}, #{data.feels_like}
-          UV: #{data.uv}, Humidity: #{data.relative_humidity}
+          UV: #{data.uv_level}, Humidity: #{data.relative_humidity}
           Wind: #{data.wind}
           Direction: #{data.wind_direction}, Degrees: #{data.wind_degrees},
           #{data.observation_time}

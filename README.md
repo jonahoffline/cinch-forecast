@@ -1,7 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/cinch-forecast.png)](http://badge.fury.io/rb/cinch-forecast)
-[![Dependency Status](https://gemnasium.com/jonahoffline/cinch-forecast.png)](https://gemnasium.com/jonahoffline/cinch-forecast)
-
-Cinch::Forecast
+Cinch::Forecast [![Gem Version](https://badge.fury.io/rb/cinch-forecast.png)](http://badge.fury.io/rb/cinch-forecast) [![Dependency Status](https://gemnasium.com/jonahoffline/cinch-forecast.png)](https://gemnasium.com/jonahoffline/cinch-forecast) [![Code Climate](https://codeclimate.com/github/jonahoffline/cinch-forecast.png)](https://codeclimate.com/github/jonahoffline/cinch-forecast)
 =================
 
 Forecast is a Cinch plugin for getting the weather forecast.

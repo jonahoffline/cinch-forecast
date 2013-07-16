@@ -17,7 +17,6 @@ Released June 06, 2013 ([0.0.2](https://github.com/jonahoffline/cinch-forecast/t
 * Fix exception issue.
 * Refactor the clean_up method.
 * Add BadgeFury and Gemnasium badges to README.
-[Tagged on GitHub](http://github.com/nex3/haml/commit/2.2.1).
 
 ## 0.0.1
 
